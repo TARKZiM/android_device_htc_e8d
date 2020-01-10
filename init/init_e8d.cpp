@@ -27,7 +27,8 @@
    IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <stdlib.h>
+#include <vector>
+
 #define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
 #include <sys/_system_properties.h>
 
@@ -40,21 +41,23 @@
 using android::base::GetProperty;
 using android::init::property_set;
 
-void property_override(char const prop[], char const value[])
+std::vector<std::string> ro_props_default_source_order = {
+    "",
+    "odm.",
+    "product.",
+    "system.",
+    "vendor.",
+};
+
+void property_override(char const prop[], char const value[], bool add = true)
 {
     prop_info *pi;
 
     pi = (prop_info*) __system_property_find(prop);
     if (pi)
         __system_property_update(pi, value, strlen(value));
-    else
+    else if (add)
         __system_property_add(prop, strlen(prop), value, strlen(value));
-}
-
-void property_override_dual(char const system_prop[], char const vendor_prop[], char const value[])
-{
-    property_override(system_prop, value);
-    property_override(vendor_prop, value);
 }
 
 void common_properties()
@@ -111,17 +114,31 @@ void vendor_load_properties()
     std::string bootmid;
     std::string device;
 
+    const auto set_ro_build_prop = [](const std::string &source,
+            const std::string &prop, const std::string &value) {
+        auto prop_name = "ro." + source + "build." + prop;
+        property_override(prop_name.c_str(), value.c_str(), false);
+    };
+
+    const auto set_ro_product_prop = [](const std::string &source,
+            const std::string &prop, const std::string &value) {
+        auto prop_name = "ro.product." + source + prop;
+        property_override(prop_name.c_str(), value.c_str(), false);
+    };
+
     bootmid = GetProperty("ro.boot.mid", "");
 
-	common_properties();
-	dualsim_properties("dsds");
-	gsm_properties("9,1");
-	property_override_dual("ro.product.model", "ro.vendor.product.model", "HTC M8Sw");
-	property_set("ro.ril.ltefgi", "1594883712");
-	property_override_dual("ro.build.fingerprint", "ro.vendor.build.fingerprint", "htc/htccn_chs_cu/htc_mecdug:5.0.2/LRX22G/506306.3:user/release-keys");
-	property_override("ro.build.description", "2.33.1402.3 CL506306 release-keys");
-	property_override_dual("ro.product.device", "ro.vendor.product.device", "htc_mecdug");
-	property_override("ro.build.product", "htc_mecdug");
+    common_properties();
+    dualsim_properties("dsds");
+    gsm_properties("9,1");
+    for (const auto &source : ro_props_default_source_order) {
+            set_ro_build_prop(source, "fingerprint", "htc/htccn_chs_cu/htc_mecdug:5.0.2/LRX22G/506306.3:user/release-keys");
+            set_ro_product_prop(source, "device", "htc_mecdug");
+            set_ro_product_prop(source, "model", "HTC M8Sw");
+    }
+    property_set("ro.ril.ltefgi", "1594883712");
+    property_override("ro.build.description", "2.33.1402.3 CL506306 release-keys");
+    property_override("ro.build.product", "htc_mecdug");
 
     device = GetProperty("ro.product.device", "");
     LOG(ERROR) << "Found bootmid '" << bootmid.c_str() << "' setting build properties for '" << device.c_str() << "' device\n";
