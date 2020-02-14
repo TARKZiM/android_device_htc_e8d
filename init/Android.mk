@@ -23,7 +23,7 @@ LOCAL_C_INCLUDES := \
     system/core/base/include \
     system/core/init
 LOCAL_CFLAGS := -Wall -DANDROID_TARGET=\"$(TARGET_BOARD_PLATFORM)\"
-LOCAL_SRC_FILES := init_m8d.cpp
-LOCAL_MODULE := libinit_m8d
+LOCAL_SRC_FILES := init_e8d.cpp
+LOCAL_MODULE := libinit_e8d
 
 include $(BUILD_STATIC_LIBRARY)

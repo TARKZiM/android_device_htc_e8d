@@ -15,15 +15,15 @@
 # limitations under the License.
 #
 
-# Inherit from m8d device
-$(call inherit-product, device/htc/m8d/device.mk)
+# Inherit from e8d device
+$(call inherit-product, device/htc/e8d/device.mk)
 
 # Inherit some common Lineage stuff.
 $(call inherit-product, vendor/lineage/config/common_full_phone.mk)
 
 # Device identifier. This must come after all inclusions.
-PRODUCT_NAME := lineage_m8d
-PRODUCT_DEVICE := m8d
+PRODUCT_NAME := lineage_e8d
+PRODUCT_DEVICE := e8d
 PRODUCT_BRAND := htc
-PRODUCT_MODEL := m8d
+PRODUCT_MODEL := e8d
 PRODUCT_MANUFACTURER := HTC

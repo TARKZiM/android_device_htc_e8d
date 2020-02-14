@@ -18,10 +18,10 @@
 
 set -e
 
-export DEVICE=m8d
-export DEVICE_COMMON=m8-common
+export DEVICE=e8d
+export DEVICE_COMMON=e8-common
 export VENDOR=htc
 
-export DEVICE_BRINGUP_YEAR=2015
+export DEVICE_BRINGUP_YEAR=2014
 
 ./../$DEVICE_COMMON/extract-files.sh $@
