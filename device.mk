@@ -21,6 +21,9 @@ $(call inherit-product-if-exists, vendor/htc/e8d/e8d-vendor.mk)
 # Inherit from e8-common
 $(call inherit-product, device/htc/e8-common/e8-common.mk)
 
+# NFC
+$(call inherit-product, device/htc/e8-common/nfc/product_pn544.mk)
+
 # Overlay
 DEVICE_PACKAGE_OVERLAYS += \
     $(LOCAL_PATH)/overlay
