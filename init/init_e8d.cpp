@@ -69,7 +69,7 @@ void property_override(char const prop[], char const value[], bool add = true)
 
 void common_properties()
 {
-    property_set("rild.libargs", "-d /dev/smd0");
+    property_set("vendor.rild.libargs", "-d /dev/smd0");
     property_set("ro.ril.disable.fd.plmn.prefix", "23402,23410,23411,23420,23594,27202,27205");
     property_set("ro.ril.enable.a52", "0");
     property_set("ro.ril.enable.a53", "1");
